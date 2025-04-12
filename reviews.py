@@ -5,8 +5,7 @@ from tkinter import messagebox
 import re
 
 class reviews:
-     def __init__(self, instance, is_admin):
-          self.is_admin=is_admin
+     def __init__(self, instance):
           self.instance=instance
           self.reviews=[]
 
@@ -41,7 +40,7 @@ class reviews:
           self.entry_score.place(x=20, y=250)
           self.entry_product=CTkOptionMenu(self.app, font=('Nunito',17), text_color=cl.colorsPalette['black'], fg_color=cl.colorsPalette['light blue'])
           self.entry_product.place(x=270, y=50)
-          columns = ("nombre", "descripcion", "puntuacion")
+          columns = ("Nombre", "Descripcion", "Puntuacion")
           self.tree = ttk.Treeview(self.app, columns=columns, show='headings', height=13)
           for col in columns:
                self.tree.heading(col, text=col.capitalize())
@@ -131,6 +130,7 @@ class reviews:
                self.tree.insert('', 'end', iid=review['resena_id'] , values=(review['nombre_user'], review['descripcion'], review['puntuacion']))
           
      def fetch_reviews(self):
+          self.instance.fetch_products()
           try:
                productos=[p['nombre'] for p in self.instance.products]
                self.reviews=self.instance.supabase.table('resenas').select('*').execute().data
@@ -138,7 +138,7 @@ class reviews:
                self.entry_product.set(productos[0])
           except Exception as e:
                print(e)
-               messagebox.showerror('Error', f'error al cargar las reseñas.')
+               messagebox.showerror('Error', 'Error al cargar las reseñas.')
 
      def sanatizeText(self, text):
           text=text.strip()

@@ -8,8 +8,7 @@ from reviews import reviews
 from orders import orders
 
 class MainMenu:
-     def __init__(self, instance, is_admin):
-          self.is_admin=is_admin
+     def __init__(self, instance):
           self.instance=instance
           set_appearance_mode('light')
           self.app=CTk()
@@ -51,10 +50,10 @@ class MainMenu:
 
           self.app.mainloop()
 
-     def orders(self): orders(self.instance, self.is_admin)
+     def orders(self): orders(self.instance)
 
-     def reviews(self): reviews(self.instance, self.is_admin)
+     def reviews(self): reviews(self.instance)
 
-     def products(self): products(self.instance, self.is_admin)
+     def products(self): products(self.instance, self.app)
 
-     def payments(self): payments(self.instance, self.is_admin)
+     def payments(self): payments(self.instance)

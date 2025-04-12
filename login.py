@@ -20,11 +20,10 @@ class login:
           y = int((screen_height / 2) - (window_height / 2))
           self.app.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
-          self.app.title('login')
+          self.app.title('Iniciar sesión')
           self.app.resizable(0,0)
           self.app.configure(fg_color=cl.colorsPalette['orange'])
           self.app.iconbitmap('assets/logo.ico')
-          CTkLabel(self.app, text='Acceder al sistema', text_color=cl.colorsPalette['white'], font=('Nunito',22)).place(y=10, x=50)
           #inputs
           CTkLabel(self.app, text='Correo electronico', text_color=cl.colorsPalette['white'], font=('Nunito',19)).place(y=70, x=50)
           self.entry_email=CTkEntry(self.app, width=190, height=33, font=('Nunito',17), text_color=cl.colorsPalette['black'], fg_color=cl.colorsPalette['pink'])
@@ -49,7 +48,7 @@ class login:
                self.intance.login_in(email, password)
                if self.intance.session_user:
                     self.app.destroy()
-                    MainMenu(self.intance, self.intance.is_admin)
+                    MainMenu(self.intance)
           else:
                messagebox.showerror('Error', 'Credenciales invalidas o formato incorrecto')
 

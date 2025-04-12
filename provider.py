@@ -1,4 +1,4 @@
-from supabase import create_client, Client
+from supabase import create_client
 import os
 from dotenv import load_dotenv
 
@@ -8,14 +8,15 @@ class provider:
           self.__session_user=None
           self.__is_admin=False
           self.products=[]
+          self.user=[]
           self.load_client()
 
      def load_client(self):
           load_dotenv()
           SUPABASE_URL=os.getenv("SUPABASE_URL")
           SUPABASE_KEY=os.getenv("SUPABASE_KEY")
-          self.supabase=create_client(SUPABASE_URL, SUPABASE_KEY)
-          self.fetch_products()
+          SUPABASE_KEY_ROLE=os.getenv("SUPABASE_KEY_ROLE")
+          self.supabase=create_client(SUPABASE_URL, SUPABASE_KEY_ROLE)
      
      @property
      def session_user(self):
@@ -60,5 +61,15 @@ class provider:
                     self.products=response.data
                else:
                     self.products=[]
+          except Exception as e:
+               print(e)
+
+     def fetch_users(self):
+          try:
+               response=self.supabase.table("usuarios").select('*').execute()
+               if response.data:
+                    self.users=response.data
+               else:
+                    self.users=[]
           except Exception as e:
                print(e)
