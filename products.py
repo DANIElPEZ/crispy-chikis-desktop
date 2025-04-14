@@ -93,7 +93,7 @@ class products:
                self.image_preview_label.image = img_ctk
 
      def save_product(self):
-          name = self.sanitizeText(self.entry_name.get())
+          name = self.sanitizeText(self.entry_name.get().strip())
           desc = self.entry_desciription.get("1.0", "end").strip()
           price = self.entry_price.get().strip()
           category = self.entry_category.get()
@@ -105,7 +105,7 @@ class products:
                messagebox.showerror("Error", "Todos los campos son obligatorios.")
                return
           
-          if not (self.sanitizePrice(price) or 0==len(name) or 0==len(desc)):
+          if not (self.sanitizePrice(price) or len(name)==0 or len(desc)==0):
                messagebox.showerror("Error", "Formato de texto no válido.")
                return
 
@@ -127,12 +127,19 @@ class products:
 
                file_name = os.path.basename(self.selected_image_path)
 
-               with open(self.selected_image_path, "rb") as f:
-                         self.instance.supabase.storage.from_("products").upload(
-                              file=f,
-                              path=file_name,
-                              file_options={"content-type": "image/png", "upsert": "true"}
-                         )
+               if self.selected_image_path.startswith("http"):
+                    response=requests.get(self.selected_image_path)
+                    response.raise_for_status()
+                    data=response.content
+               else:
+                    with open(self.selected_image_path, 'rb') as f:
+                         data=f.read()
+
+               self.instance.supabase.storage.from_("products").upload(
+                    file=data,
+                    path=file_name,
+                    file_options={"content-type": "image/png", "upsert": "true"}
+               )
 
                url_img = self.instance.supabase.storage.from_("products").get_public_url(file_name)
 
@@ -150,8 +157,6 @@ class products:
                else:
                     self.instance.supabase.table("productos").insert(product_data).execute()
                     messagebox.showinfo("Éxito", "Producto guardado correctamente.")
-
-               self.app.destroy()
 
           except Exception as e:
                print(e)
@@ -279,7 +284,6 @@ class products:
      def load_products_and_categories(self):
           try:
                self.instance.fetch_products()
-               self.instance.fetch_users()
                self.categories = self.instance.supabase.table('tipo_producto').select('*').execute().data
                self.entry_category.configure(values=[category['nombre'] for category in self.categories])
                if self.categories:
@@ -294,11 +298,11 @@ class products:
 
      def sanitizeText(self, text):
           text = text.strip()
-          if re.match(r'^[A-Za-zÀ-ÿ ,\.]+$', text):
+          if re.match(r'^[A-Za-zÀ-ÿ\s,\.]+$', text):
                return text
           else:
                messagebox.showerror('Error', 'Formato de texto no válido.')
                return ''
 
      def sanitizePrice(self, text):
-          return bool(re.fullmatch(r'\d+', text.strip()))
+          return bool(re.fullmatch(r'\d+(\.\d+)?', text.strip()))

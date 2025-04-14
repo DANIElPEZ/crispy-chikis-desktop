@@ -50,7 +50,7 @@ class MainMenu:
 
           self.app.mainloop()
 
-     def orders(self): orders(self.instance)
+     def orders(self): orders(self.instance, self.app)
 
      def reviews(self): reviews(self.instance)
 

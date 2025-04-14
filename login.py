@@ -40,10 +40,6 @@ class login:
           email=self.entry_email.get()
           password=self.entry_password.get()
 
-          #test credentials:
-          email="fordowhilem@gmail.com"
-          password="The794613$"
-
           if self.sanatizeEmail(email) and self.sanatizePassword(password):
                self.intance.login_in(email, password)
                if self.intance.session_user:

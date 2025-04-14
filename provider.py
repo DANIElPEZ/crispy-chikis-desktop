@@ -8,7 +8,7 @@ class provider:
           self.__session_user=None
           self.__is_admin=False
           self.products=[]
-          self.user=[]
+          self.users=[]
           self.load_client()
 
      def load_client(self):
@@ -66,7 +66,7 @@ class provider:
 
      def fetch_users(self):
           try:
-               response=self.supabase.table("usuarios").select('*').execute()
+               response=self.supabase.table("usuarios").select('usuario_id,nombre,email,telefono').execute()
                if response.data:
                     self.users=response.data
                else:
