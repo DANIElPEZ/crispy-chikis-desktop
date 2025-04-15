@@ -28,7 +28,8 @@ class orders:
           CTkLabel(self.app, text='Nombre', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=20, y=20)
           CTkLabel(self.app, text='Telefono', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=20, y=90)
           CTkLabel(self.app, text='Email', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=20, y=160)
-          CTkLabel(self.app, text='Estado', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=20, y=230)
+          CTkLabel(self.app, text='Direccion Destino', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=20, y=230)
+          CTkLabel(self.app, text='Estado Pedido', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=20, y=300)
           CTkLabel(self.app, text='Ver Pedido', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=280, y=20)
           CTkLabel(self.app, text='Filtrar estado', text_color=cl.colorsPalette['white'], font=('Nunito', 19)).place(x=730, y=20)
 
@@ -41,9 +42,12 @@ class orders:
           self.entry_phone = CTkEntry(self.app, width=210, height=33, font=('Nunito', 17),
                                         text_color=cl.colorsPalette['white'], fg_color=cl.colorsPalette['light brown'])
           self.entry_phone.place(x=20, y=190)
+          self.entry_address = CTkEntry(self.app, width=210, height=33, font=('Nunito', 17),
+                                        text_color=cl.colorsPalette['white'], fg_color=cl.colorsPalette['light brown'])
+          self.entry_address.place(x=20, y=260)
           self.entry_status = CTkOptionMenu(self.app, font=('Nunito', 17), values=['Pendidente', 'Cancelado'],
                                              text_color=cl.colorsPalette['white'], fg_color=cl.colorsPalette['light brown'])
-          self.entry_status.place(x=20, y=260)
+          self.entry_status.place(x=20, y=330)
 
           self.entry_status_tree = CTkOptionMenu(self.app, font=('Nunito', 17), values=['Todos','Pendidente', 'Cancelado'],
                                              text_color=cl.colorsPalette['white'], fg_color=cl.colorsPalette['light brown'], command=self.filter_orders)
@@ -112,7 +116,6 @@ class orders:
                order = next((order for order in self.orders_list if order['orden_id'] == order_id), None)
                if order:
                     new_status = 2 if order['estado'] == 1 else 1
-                    print(f"Estado actual: {order['estado']}")
                     self.instance.supabase.table("ordenes").update({"estado": new_status}).eq("orden_id", order_id).execute()
                     messagebox.showinfo('Exito', 'Estado actualizado')
           else:
@@ -163,6 +166,7 @@ class orders:
           self.entry_name.delete(0, 'end')
           self.entry_number.delete(0, 'end')
           self.entry_phone.delete(0, 'end')
+          self.entry_address.delete(0, 'end')
           selected_item = self.tree.selection()
           if selected_item:
                order_id = self.tree.item(selected_item)['values'][0]
@@ -170,6 +174,7 @@ class orders:
                user=next((user for user in self.instance.users if user['usuario_id'] == order['usuario_id']), None)
                if order:
                     self.entry_status.set('Pendiente' if order['estado'] == 1 else 'Cancelado')
+                    self.entry_address.insert(0, order['direccion'])
                     if user:
                          self.entry_name.insert(0, user['nombre'])
                          self.entry_number.insert(0, user['telefono'])
