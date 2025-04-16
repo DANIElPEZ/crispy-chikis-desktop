@@ -1,5 +1,5 @@
 import colors as cl
-from customtkinter import CTkToplevel, CTkImage, CTkLabel, CTkButton, CTkEntry, CTkOptionMenu, set_appearance_mode
+from customtkinter import CTkToplevel, CTkImage, CTkLabel, CTkButton, CTkEntry, CTkOptionMenu, CTkTextbox, set_appearance_mode
 from tkinter import messagebox, ttk
 from PIL import Image
 from tkinter.filedialog import asksaveasfilename
@@ -89,7 +89,7 @@ class orders:
                watch_order=CTkToplevel(self.app)
                watch_order.grab_set()
                window_width =440
-               window_height = 300
+               window_height = 440
                screen_width = self.app.winfo_screenwidth()
                screen_height = self.app.winfo_screenheight()
                x = int((screen_width / 2) - (window_width / 2))
@@ -104,6 +104,9 @@ class orders:
                for col in columns:
                     tree.heading(col, text=col.capitalize())
                tree.place(x=20, y=20)
+               description=CTkTextbox(watch_order, width=400, height=100, font=('Nunito',17), text_color=cl.colorsPalette['black'], fg_color=cl.colorsPalette['light blue'])
+               description.place(x=20, y=310)
+               description.insert('1.0', order['descripcion_adicional'])
                for producto_id, cantidad in product_counts.items():
                     producto = next((p for p in self.instance.products if p['producto_id'] == producto_id), None)
                     if producto:
