@@ -66,7 +66,3 @@ class login:
 
 if __name__ == '__main__':
      login()
-
-#test credentials:
-#email: fordowhilem@gmail.com
-#password: The794613$
