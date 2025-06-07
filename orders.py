@@ -89,7 +89,7 @@ class orders:
                watch_order=CTkToplevel(self.app)
                watch_order.grab_set()
                window_width =440
-               window_height = 440
+               window_height = 480
                screen_width = self.app.winfo_screenwidth()
                screen_height = self.app.winfo_screenheight()
                x = int((screen_width / 2) - (window_width / 2))
@@ -100,12 +100,14 @@ class orders:
                watch_order.configure(fg_color=cl.colorsPalette['dark blue'])
                watch_order.iconbitmap('assets/logo.ico')
                columns=('Cantidad','Nombre')
+               CTkLabel(watch_order, text='Pedido', text_color=cl.colorsPalette['white'], font=('Nunito',19)).place(y=15, x=20)
                tree=ttk.Treeview(watch_order, columns=columns, show='headings', height=12)
                for col in columns:
                     tree.heading(col, text=col.capitalize())
-               tree.place(x=20, y=20)
+               tree.place(x=20, y=47)
+               CTkLabel(watch_order, text='Descripcion adicional', text_color=cl.colorsPalette['white'], font=('Nunito',19)).place(y=320, x=20)
                description=CTkTextbox(watch_order, width=400, height=100, font=('Nunito',17), text_color=cl.colorsPalette['black'], fg_color=cl.colorsPalette['light blue'])
-               description.place(x=20, y=310)
+               description.place(x=20, y=347)
                description.insert('1.0', order['descripcion_adicional'])
                for producto_id, cantidad in product_counts.items():
                     producto = next((p for p in self.instance.products if p['producto_id'] == producto_id), None)
