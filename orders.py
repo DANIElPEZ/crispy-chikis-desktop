@@ -45,7 +45,7 @@ class orders:
           self.entry_address = CTkEntry(self.app, width=210, height=33, font=('Nunito', 17),
                                         text_color=cl.colorsPalette['white'], fg_color=cl.colorsPalette['light brown'])
           self.entry_address.place(x=20, y=260)
-          self.entry_status = CTkOptionMenu(self.app, font=('Nunito', 17), values=['Pendidente', 'Cancelado'],
+          self.entry_status = CTkOptionMenu(self.app, font=('Nunito', 17), values=['Pendidente', 'Cancelado','Entregado'],
                                              text_color=cl.colorsPalette['white'], fg_color=cl.colorsPalette['light brown'])
           self.entry_status.place(x=20, y=330)
 
@@ -120,7 +120,13 @@ class orders:
                order_id = self.tree.item(selected_item)['values'][0]
                order = next((order for order in self.orders_list if order['orden_id'] == order_id), None)
                if order:
-                    new_status = 2 if order['estado'] == 1 else 1
+                    option=self.entry_status.get()
+                    mapping = {
+                         'Pendidente': 1,
+                         'Cancelado': 2,
+                         'Entregado': 3
+                    }
+                    new_status = mapping.get(option, 1)
                     self.instance.supabase.table("ordenes").update({"estado": new_status}).eq("orden_id", order_id).execute()
                     messagebox.showinfo('Exito', 'Estado actualizado')
           else:
